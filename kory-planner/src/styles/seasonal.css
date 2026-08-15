@@ -13,21 +13,6 @@ body.season-birthday .app-shell-chrome { --season-accent: #f0997b; }
   border-top: 3px solid var(--season-accent, transparent);
 }
 
-/* Achievements screen gets the full seasonal motif set — static icon, no
-   motion. Bug fix: season classes land on <body> (see app.js), not on
-   .village-screen itself, so these must be ancestor-based selectors —
-   matching the pattern already used for the app-shell accent border above.
-   The old direct-class selectors below never matched anything. */
-body.season-winter .village-screen::before { content: "❄"; }
-body.season-summer .village-screen::before { content: "☀"; }
-body.season-fall .village-screen::before { content: "🍂"; }
-body.season-spring .village-screen::before { content: "🌸"; }
-body.season-birthday .village-screen::before { content: "🎂"; }
-
-.village-screen::before {
-  position: absolute;
-  top: 10px;
-  right: 14px;
-  font-size: 20px;
-  line-height: 1;
-}
+/* Achievements screen accent border only now — the richer seasonal icon
+   row itself is rendered by village.js from seasonal-icons.js, since a
+   3-icon set needs real markup, not a single CSS ::before glyph. */

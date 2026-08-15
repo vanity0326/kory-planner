@@ -2,7 +2,10 @@
 // the gear icon. No password/lock — this is decluttering, not security.
 
 async function renderSettings(container) {
-  const settings = await window.PlannerStorage.getSettings();
+  const [settings, dailySchoolItems] = await Promise.all([
+    window.PlannerStorage.getSettings(),
+    window.PlannerStorage.getDailySchoolItems(),
+  ]);
   const thresholds = settings.rewardThresholds || [];
   const suggestion = window.PlannerAvatar.suggestScaffoldingChange(
     settings.scaffoldingLevel, settings.stepOutcomeHistory || []
@@ -60,8 +63,19 @@ async function renderSettings(container) {
       <p class="field-hint">Subscribe once in Google Calendar (Settings → Add calendar → From URL):</p>
       <div class="ics-url-box" id="ics-url-box"></div>
 
+      <h2>Daily School Items</h2>
+      <p class="field-hint">Recurring daily items created from Add Assignment. These auto-appear on Today every day until removed here.</p>
+      <div id="daily-school-list">
+        ${dailySchoolItems.map(d => `
+          <div class="threshold-row" data-id="${d.id}">
+            <span>${escapeHtmlSettings(d.subject)} — ${escapeHtmlSettings(d.title)}</span>
+            <button type="button" class="remove-daily-school" data-id="${d.id}" aria-label="Remove"><i class="ti ti-x" aria-hidden="true"></i></button>
+          </div>
+        `).join('') || '<p class="field-hint">None yet.</p>'}
+      </div>
+
       <h2>Testing</h2>
-      <p class="field-hint">Wipes assignments, streaks, home practice, and avatar XP/level/badges back to zero — for clearing out trial data before the real school year starts. Does NOT touch the Rafters or create an archive entry (that's what Year-End Archive is for, below). Your reward thresholds and seasonal skin choice are kept.</p>
+      <p class="field-hint">Wipes assignments, streaks, home practice, avatar XP/level/badges, and both daily-item lists (school + Home Practice) back to zero — for clearing out trial data before the real school year starts. Does NOT touch the Rafters or create an archive entry (that's what Year-End Archive is for, below). Your reward thresholds and seasonal skin choice are kept.</p>
       <button type="button" id="clear-test-btn" class="secondary-btn" style="width: 100%; color: var(--text-danger); border-color: var(--border-danger);">Clear test data</button>
       <p class="field-hint" id="clear-test-result"></p>
 
@@ -120,6 +134,14 @@ async function renderSettings(container) {
   document.getElementById('season-override').addEventListener('change', async (e) => {
     settings.seasonalOverride = e.target.value || null;
     await window.PlannerStorage.saveSettings(settings);
+  });
+
+  container.querySelectorAll('.remove-daily-school').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const updated = dailySchoolItems.filter(d => d.id !== btn.dataset.id);
+      await window.PlannerStorage.saveDailySchoolItems(updated);
+      renderSettings(container);
+    });
   });
 
   document.getElementById('clear-test-btn').addEventListener('click', async () => {

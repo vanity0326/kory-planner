@@ -133,6 +133,18 @@ async function saveDailyPracticeSubjects(list) {
   return Storage.set('dailyPracticeSubjects', list);
 }
 
+// Separate from dailyPracticeSubjects on purpose — school-side daily items
+// (created from Add Assignment) never flow into the Home Practice daily
+// checklist, and vice versa. Two independent lists, two independent UIs.
+async function getDailySchoolItems() {
+  const data = await Storage.get('dailySchoolItems');
+  return data || [];
+}
+
+async function saveDailySchoolItems(list) {
+  return Storage.set('dailySchoolItems', list);
+}
+
 async function getKnownSubjects() {
   const data = await Storage.get('subjects');
   return data || [];
@@ -164,6 +176,8 @@ async function clearTestData() {
     }),
     saveAvatar({ xp: 0, level: 1, badges: [], totalSelfEntries: 0, schoolYearLabel: null }),
     Storage.set('subjects', []),
+    saveDailyPracticeSubjects([]),
+    saveDailySchoolItems([]),
   ]);
   const settings = await getSettings();
   settings.stepOutcomeHistory = [];
@@ -190,4 +204,6 @@ window.PlannerStorage = {
   clearTestData,
   getDailyPracticeSubjects,
   saveDailyPracticeSubjects,
+  getDailySchoolItems,
+  saveDailySchoolItems,
 };

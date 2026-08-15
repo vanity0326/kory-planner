@@ -99,6 +99,7 @@ async function renderAddAssignment(container) {
 
         <div id="step-split-prompt" style="display: none;"></div>
         <div id="study-reminder-toggle" style="display: none;"></div>
+        <div id="daily-school-toggle" style="display: none;"></div>
 
         <p class="field-error" id="form-error" style="display: none;"></p>
 
@@ -116,6 +117,7 @@ async function renderAddAssignment(container) {
   let enteredBy = 'kory';
   let type = 'assignment';
   let studyReminderOn = false;
+  let makeDailySchoolItem = false;
   let chosenSteps = null; // set if user opts into step-split
 
   container.querySelectorAll('#entered-by-toggle .segmented-option').forEach(btn => {
@@ -142,9 +144,12 @@ async function renderAddAssignment(container) {
     const dueVal = document.getElementById('due-input').value;
     const stepPromptEl = document.getElementById('step-split-prompt');
     const studyToggleEl = document.getElementById('study-reminder-toggle');
+    const dailySchoolToggleEl = document.getElementById('daily-school-toggle');
 
     if (type === 'test') {
       stepPromptEl.style.display = 'none';
+      dailySchoolToggleEl.style.display = 'none';
+      makeDailySchoolItem = false;
       studyToggleEl.style.display = 'block';
       studyToggleEl.innerHTML = `
         <label class="checkbox-row">
@@ -159,6 +164,17 @@ async function renderAddAssignment(container) {
     }
 
     studyToggleEl.style.display = 'none';
+
+    dailySchoolToggleEl.style.display = 'block';
+    dailySchoolToggleEl.innerHTML = `
+      <label class="checkbox-row">
+        <input type="checkbox" id="daily-school-checkbox" />
+        Make this a daily habit (shows as a one-tap checklist item on Today every day — separate from Home Practice's daily list)
+      </label>
+    `;
+    document.getElementById('daily-school-checkbox').addEventListener('change', (e) => {
+      makeDailySchoolItem = e.target.checked;
+    });
 
     if (dueVal && daysUntil(dueVal) >= STEP_SPLIT_THRESHOLD_DAYS) {
       stepPromptEl.style.display = 'block';
@@ -230,6 +246,15 @@ async function renderAddAssignment(container) {
     assignments.push(newAssignment);
     await window.PlannerStorage.saveAssignments(assignments);
     await window.PlannerStorage.addKnownSubject(subject);
+
+    if (makeDailySchoolItem) {
+      const dailyItems = await window.PlannerStorage.getDailySchoolItems();
+      const exists = dailyItems.some(d => d.subject.toLowerCase() === subject.toLowerCase() && d.title.toLowerCase() === title.toLowerCase());
+      if (!exists) {
+        dailyItems.push({ id: `ds-${Date.now()}`, subject, title, enteredBy });
+        await window.PlannerStorage.saveDailySchoolItems(dailyItems);
+      }
+    }
 
     let milestoneBadge = null;
     if (enteredBy === 'kory') {

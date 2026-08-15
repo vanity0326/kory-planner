@@ -149,7 +149,47 @@ function recurringNudge(assignments) {
   return subject;
 }
 
+// School-side daily items (registered from Add Assignment) materialize into
+// a real assignment entry due today, once per day. Idempotent: checks for
+// an existing assignment tagged with this dailyItemId due today before
+// creating another, so re-running on every Today load is safe. Separate
+// entirely from Home Practice's daily list — no shared storage, no shared UI.
+async function ensureDailySchoolInstances() {
+  const dailyItems = await window.PlannerStorage.getDailySchoolItems();
+  if (!dailyItems.length) return;
+
+  const assignments = await window.PlannerStorage.getAssignments();
+  const todayDateStr = new Date().toISOString().slice(0, 10);
+  let changed = false;
+
+  dailyItems.forEach(item => {
+    const alreadyExists = assignments.some(a => a.dailyItemId === item.id && a.dueDate === todayDateStr);
+    if (!alreadyExists) {
+      assignments.push({
+        id: `a-daily-${item.id}-${todayDateStr}`,
+        subject: item.subject,
+        title: item.title,
+        dueDate: todayDateStr,
+        type: 'assignment',
+        done: false,
+        enteredBy: item.enteredBy || 'kory',
+        enteredAt: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
+        steps: null,
+        studyReminder: false,
+        studySessionLogged: false,
+        dailyItemId: item.id,
+      });
+      changed = true;
+    }
+  });
+
+  if (changed) await window.PlannerStorage.saveAssignments(assignments);
+}
+
 async function renderToday(container) {
+  await ensureDailySchoolInstances();
+
   const [assignments, streaks] = await Promise.all([
     window.PlannerStorage.getAssignments(),
     window.PlannerStorage.getStreaks(),

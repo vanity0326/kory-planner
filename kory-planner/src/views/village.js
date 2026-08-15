@@ -30,16 +30,25 @@ function stageIcon(level, size) {
 }
 
 async function renderVillage(container) {
-  const [avatar, village] = await Promise.all([
+  const [avatar, village, settings] = await Promise.all([
     window.PlannerStorage.getAvatar(),
     window.PlannerStorage.getVillage(),
+    window.PlannerStorage.getSettings(),
   ]);
+
+  const season = window.PlannerApp.detectSeason(settings);
+  const seasonIcons = window.PlannerSeasonalIcons[season] || [];
 
   const stageName = window.PlannerAvatar.stageNameForLevel(avatar.level);
   const badges = avatar.badges || [];
 
   container.innerHTML = `
     <div class="village-screen">
+      ${seasonIcons.length ? `
+        <div class="seasonal-icon-row" aria-hidden="true">
+          ${seasonIcons.map(svg => `<span class="seasonal-icon">${svg}</span>`).join('')}
+        </div>
+      ` : ''}
       <h1>Kory's All-time Achievements</h1>
 
       <div class="avatar-card">

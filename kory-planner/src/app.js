@@ -52,7 +52,7 @@ async function navigate(route) {
   window.location.hash = route;
 }
 
-window.PlannerApp = { navigate };
+window.PlannerApp = { navigate, detectSeason };
 
 document.addEventListener('DOMContentLoaded', async () => {
   await applySeason();
