@@ -1,0 +1,21 @@
+/* Subject colors are fixed identity markers, never touched by seasonal skins.
+   Add new subjects here as Kory's class list is finalized. */
+
+.subject-pill {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.subject-math { background: #eaf3de; color: #27500a; }
+.subject-reading { background: #e6f1fb; color: #0c447c; }
+.subject-piano { background: #eeedfe; color: #3c3489; }
+.subject-english { background: var(--bg-danger); color: var(--text-danger); }
+.subject-science { background: #faeeda; color: #633806; }
+.subject-korean { background: #fbeaf0; color: #72243e; }
+.subject-critical-thinking { background: #faece7; color: #712b13; }
+.subject-cursive { background: #f1efe8; color: #444441; }
+.subject-typing { background: #e1f5ee; color: #085041; }
+.subject-chore { background: #f1efe8; color: #444441; }
