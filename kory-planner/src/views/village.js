@@ -25,7 +25,7 @@ async function renderVillage(container) {
 
   container.innerHTML = `
     <div class="village-screen">
-      <h1>Kory's village</h1>
+      <h1>Kory's Village</h1>
 
       <div class="avatar-card">
         <div class="avatar-visual" aria-hidden="true"><i class="ti ti-plant-2"></i></div>
@@ -42,7 +42,7 @@ async function renderVillage(container) {
       </div>
 
       ${badges.length ? `
-        <h2>Badge shelf</h2>
+        <h2>Badge Shelf</h2>
         <div class="badge-shelf">
           ${badges.map(b => `
             <div class="badge-chip" style="background: ${b.bg}; color: ${b.color};">
@@ -52,11 +52,11 @@ async function renderVillage(container) {
           `).join('')}
         </div>
       ` : `
-        <h2>Badge shelf</h2>
+        <h2>Badge Shelf</h2>
         <p class="field-hint">Keep logging your own assignments — the first badge shows up here.</p>
       `}
 
-      <h2>Past years</h2>
+      <h2>Past Years</h2>
       ${village.length ? `
         <div class="village-grid">
           ${village.map(v => `

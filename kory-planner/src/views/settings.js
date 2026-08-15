@@ -13,7 +13,7 @@ async function renderSettings(container) {
       <h1>Settings</h1>
       <p class="field-hint">Parent-only controls. Not shown on Kory's main nav.</p>
 
-      <h2>Step-split scaffolding</h2>
+      <h2>Step-Split Scaffolding</h2>
       <p class="field-hint">How much structure big-assignment step templates give him. You can adjust this either direction anytime.</p>
       <select id="scaffolding-select">
         <option value="full">Full — detailed step templates</option>
@@ -31,7 +31,7 @@ async function renderSettings(container) {
         </div>
       ` : ''}
 
-      <h2>Reward thresholds</h2>
+      <h2>Reward Thresholds</h2>
       <div id="threshold-list">
         ${thresholds.map((t, i) => `
           <div class="threshold-row" data-index="${i}">
@@ -46,7 +46,7 @@ async function renderSettings(container) {
         <button type="button" id="add-threshold-btn" class="secondary-btn">Add</button>
       </div>
 
-      <h2>Seasonal skin</h2>
+      <h2>Seasonal Skin</h2>
       <select id="season-override">
         <option value="">Auto (based on today's date)</option>
         <option value="winter">Winter</option>
@@ -56,11 +56,11 @@ async function renderSettings(container) {
         <option value="birthday">Birthday (Nov 23)</option>
       </select>
 
-      <h2>Calendar feed</h2>
+      <h2>Calendar Feed</h2>
       <p class="field-hint">Subscribe once in Google Calendar (Settings → Add calendar → From URL):</p>
       <div class="ics-url-box" id="ics-url-box"></div>
 
-      <h2>Year-end archive</h2>
+      <h2>Year-End Archive</h2>
       <p class="field-hint">Graduates this year's avatar into the village, archives everything, and starts fresh. Irreversible from here.</p>
       <button type="button" id="archive-btn" class="secondary-btn" style="width: 100%; color: var(--text-danger); border-color: var(--border-danger);">Run year-end archive</button>
       <p class="field-hint" id="archive-result"></p>

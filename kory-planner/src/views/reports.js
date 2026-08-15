@@ -15,7 +15,7 @@ async function renderReports(container) {
 
   container.innerHTML = `
     <div class="doing-screen">
-      <h1>Kory's progress</h1>
+      <h1>Kory's Progress</h1>
       <div class="report-grid">
         <div class="metric-card"><p class="metric-label">Completed</p><p class="metric-value">${completed} / ${total}</p></div>
         <div class="metric-card"><p class="metric-label">Completion rate</p><p class="metric-value">${rate}%</p></div>
@@ -60,13 +60,13 @@ function exportPrintView(assignments, summary, streaks) {
   const win = window.open('', '_blank');
   const rows = assignments.map(a => `<tr><td>${a.subject}</td><td>${a.title}</td><td>${a.type || 'assignment'}</td><td>${a.dueDate}</td><td>${a.done ? 'Done' : 'Open'}</td></tr>`).join('');
   win.document.write(`
-    <html><head><title>Kory's progress report</title><style>
+    <html><head><title>Kory's Progress Report</title><style>
       body { font-family: -apple-system, sans-serif; padding: 24px; color: #1f1e1b; }
       h1 { font-size: 20px; } table { width: 100%; border-collapse: collapse; margin-top: 16px; }
       th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid #ddd; font-size: 13px; }
       .summary { display: flex; gap: 24px; margin-top: 12px; flex-wrap: wrap; } .summary div { font-size: 14px; }
     </style></head><body>
-      <h1>Kory's progress report — ${new Date().toLocaleDateString()}</h1>
+      <h1>Kory's Progress Report — ${new Date().toLocaleDateString()}</h1>
       <div class="summary">
         <div><strong>${summary.completed} / ${summary.total}</strong> completed</div>
         <div><strong>${summary.rate}%</strong> completion rate</div>

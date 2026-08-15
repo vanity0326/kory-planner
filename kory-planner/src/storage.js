@@ -42,12 +42,26 @@ async function saveAssignments(assignments) {
 
 async function getStreaks() {
   const data = await Storage.get('streaks');
-  // Two SEPARATE tracks, per spec: completion (finished work) and entry
-  // (proactively logging assignments) are different skills — planning vs
-  // executing — and shouldn't be conflated into one number.
-  return data || {
+  const defaults = {
     completion: { current: 0, lastCompletedDate: null, history: [] },
     entry: { current: 0, lastEntryDate: null, history: [] },
+  };
+  if (!data) return defaults;
+
+  // Migrate old flat shape (from before the race/entry-streak rebuild) into
+  // the new nested shape, so existing saved data doesn't crash every screen
+  // that reads streaks.completion / streaks.entry.
+  if (!data.completion && typeof data.current === 'number') {
+    return {
+      completion: { current: data.current, lastCompletedDate: data.lastCompletedDate || null, history: data.history || [] },
+      entry: defaults.entry,
+    };
+  }
+
+  // Defensive: fill in either half if somehow missing.
+  return {
+    completion: data.completion || defaults.completion,
+    entry: data.entry || defaults.entry,
   };
 }
 

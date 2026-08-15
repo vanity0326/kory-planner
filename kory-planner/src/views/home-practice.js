@@ -17,7 +17,7 @@ async function renderHomePractice(container) {
 
   container.innerHTML = `
     <div class="doing-screen">
-      <h1>Home practice</h1>
+      <h1>Home Practice</h1>
       <p class="field-hint">Extra work outside school, logged on the honor system.</p>
 
       ${upcomingTests.length ? `

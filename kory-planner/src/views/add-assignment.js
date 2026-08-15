@@ -70,7 +70,7 @@ async function renderAddAssignment(container) {
 
   container.innerHTML = `
     <div class="doing-screen">
-      <h1>Add assignment</h1>
+      <h1>Add Assignment</h1>
 
       <form id="add-form" novalidate>
         <label>Who's adding this?</label>
