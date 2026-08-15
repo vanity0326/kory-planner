@@ -1,4 +1,4 @@
-# kory-planner# Kory's Planner
+# kory-planner# 
 
 An ADHD-friendly homework and chore planner built for one family, one kid. Shared between parent and child with no logins, deployed on Netlify with Netlify Blobs for durable storage meant to last for years, not just a school term.
 
