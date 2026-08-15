@@ -28,6 +28,16 @@
     .done-circle { width: 32px; height: 32px; border-radius: 50%; background: var(--fill-success); color: var(--on-success); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .overdue-tag { margin-left: 6px; font-size: 11px; color: var(--text-muted); }
     .overdue-tag-strong { color: var(--text-danger); font-weight: 600; }
+
+    /* Daily Practice checklist — same one-tap-done language as the assignment
+       row, but the circle is itself the tap target (not-yet-done = outline
+       only, matches app-wide "no shame, just quiet state" convention) */
+    .daily-practice-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1.25rem; }
+    .daily-practice-row { display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--surface-1); border-radius: var(--radius); }
+    .daily-practice-row .done-circle { border: none; cursor: pointer; }
+    .daily-practice-row:not(.done) .done-circle { background: transparent; border: 2px solid var(--border); color: var(--text-muted); cursor: pointer; }
+    .daily-practice-row.done { opacity: 0.7; }
+    .remove-daily { width: 28px; height: 28px; border-radius: 50%; border: none; background: transparent; color: var(--text-muted); flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
     .section-divider { height: 1px; background: var(--border); margin: 6px 2px; }
     .empty-state { color: var(--text-muted); font-size: 14px; padding: 1rem 0; }
     .add-assignment-btn { width: 100%; margin-top: 1.25rem; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px; border-radius: var(--radius); border: 0.5px solid var(--border-strong); background: transparent; color: var(--text-primary); font-size: 14px; }
@@ -115,7 +125,7 @@
     <nav class="bottom-nav" aria-label="Main navigation">
       <button data-route="today" aria-label="Today"><i class="ti ti-list-check" aria-hidden="true"></i></button>
       <button data-route="home-practice" aria-label="Home practice"><i class="ti ti-notebook" aria-hidden="true"></i></button>
-      <button data-route="village" aria-label="Village"><i class="ti ti-paw" aria-hidden="true"></i></button>
+      <button data-route="village" aria-label="Achievements"><i class="ti ti-trophy" aria-hidden="true"></i></button>
       <button data-route="reports" aria-label="Reports"><i class="ti ti-chart-bar" aria-hidden="true"></i></button>
     </nav>
   </div>

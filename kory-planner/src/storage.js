@@ -124,6 +124,15 @@ async function getArchive(yearLabel) {
   return Storage.get(`archive-${yearLabel}`);
 }
 
+async function getDailyPracticeSubjects() {
+  const data = await Storage.get('dailyPracticeSubjects');
+  return data || [];
+}
+
+async function saveDailyPracticeSubjects(list) {
+  return Storage.set('dailyPracticeSubjects', list);
+}
+
 async function getKnownSubjects() {
   const data = await Storage.get('subjects');
   return data || [];
@@ -179,4 +188,6 @@ window.PlannerStorage = {
   getHomePractice,
   saveHomePractice,
   clearTestData,
+  getDailyPracticeSubjects,
+  saveDailyPracticeSubjects,
 };

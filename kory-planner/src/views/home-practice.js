@@ -3,11 +3,28 @@
 // No verification, no clawback mechanic for false logs — this is a trust
 // space, not another thing to be checked up on. Also hosts test study
 // sessions, logged the same trust-based way.
+//
+// Two layers here:
+//   - Daily Practice: standing recurring items (e.g. "Reading") that show
+//     as a one-tap checklist every day, so they never need retyping.
+//   - One-off log: the original free-form form, for anything that isn't
+//     a standing daily habit.
+
+function todayStr() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function loggedToday(entries, subject) {
+  const today = todayStr();
+  return entries.some(e => e.subject === subject && e.loggedAt.slice(0, 10) === today);
+}
 
 async function renderHomePractice(container) {
-  const [entries, assignments] = await Promise.all([
+  const [entries, assignments, dailySubjects, knownSubjects] = await Promise.all([
     window.PlannerStorage.getHomePractice(),
     window.PlannerStorage.getAssignments(),
+    window.PlannerStorage.getDailyPracticeSubjects(),
+    window.PlannerStorage.getKnownSubjects(),
   ]);
 
   const upcomingTests = assignments.filter(a =>
@@ -30,12 +47,42 @@ async function renderHomePractice(container) {
         </div>
       ` : ''}
 
+      ${dailySubjects.length ? `
+        <h2>Today's Daily Practice</h2>
+        <div class="daily-practice-list">
+          ${dailySubjects.map(d => {
+            const done = loggedToday(entries, d.subject);
+            return `
+              <div class="daily-practice-row ${done ? 'done' : ''}">
+                <button type="button" class="done-circle" data-daily-log="${d.id}" ${done ? 'disabled' : ''} aria-label="${done ? 'Logged' : 'Log ' + d.subject}">
+                  <i class="ti ${done ? 'ti-check' : 'ti-circle'}" aria-hidden="true"></i>
+                </button>
+                <div class="assignment-info">
+                  <p class="assignment-title">${escapeHtmlHP(d.description)}</p>
+                  <span class="subject-pill subject-${d.subject.toLowerCase().replace(/\s+/g, '-')}">${escapeHtmlHP(d.subject)}</span>
+                </div>
+                <button type="button" class="remove-daily" data-remove-daily="${d.id}" aria-label="Stop daily reminder for ${escapeHtmlHP(d.subject)}"><i class="ti ti-x" aria-hidden="true"></i></button>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      ` : ''}
+
+      <h2>Log Something Else</h2>
       <form id="practice-form" novalidate>
         <label for="practice-subject">Subject</label>
-        <input id="practice-subject" type="text" placeholder="Math" required />
+        <input id="practice-subject" type="text" list="practice-subject-options" placeholder="Math" required autocomplete="off" />
+        <datalist id="practice-subject-options">
+          ${knownSubjects.map(s => `<option value="${escapeHtmlHP(s)}"></option>`).join('')}
+        </datalist>
 
         <label for="practice-desc">What did you work on?</label>
         <input id="practice-desc" type="text" placeholder="15 min of practice problems" required />
+
+        <label class="checkbox-row">
+          <input type="checkbox" id="make-daily-checkbox" />
+          Make this a daily habit (shows as a one-tap checklist item every day)
+        </label>
 
         <p class="field-error" id="practice-error" style="display: none;"></p>
 
@@ -52,6 +99,7 @@ async function renderHomePractice(container) {
     e.preventDefault();
     const subject = document.getElementById('practice-subject').value.trim();
     const description = document.getElementById('practice-desc').value.trim();
+    const makeDaily = document.getElementById('make-daily-checkbox').checked;
     const errorEl = document.getElementById('practice-error');
     if (!subject || !description) {
       errorEl.textContent = 'Fill in both fields first.';
@@ -60,7 +108,36 @@ async function renderHomePractice(container) {
     }
     errorEl.style.display = 'none';
     await logPractice(subject, description, null);
+    await window.PlannerStorage.addKnownSubject(subject);
+    if (makeDaily) {
+      const daily = await window.PlannerStorage.getDailyPracticeSubjects();
+      const exists = daily.some(d => d.subject.toLowerCase() === subject.toLowerCase());
+      if (!exists) {
+        daily.push({ id: `dp-${Date.now()}`, subject, description });
+        await window.PlannerStorage.saveDailyPracticeSubjects(daily);
+      }
+    }
     renderHomePractice(container);
+  });
+
+  container.querySelectorAll('[data-daily-log]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const id = btn.dataset.dailyLog;
+      const item = dailySubjects.find(d => d.id === id);
+      if (!item) return;
+      await logPractice(item.subject, item.description, null);
+      renderHomePractice(container);
+    });
+  });
+
+  container.querySelectorAll('[data-remove-daily]').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const id = btn.dataset.removeDaily;
+      const updated = dailySubjects.filter(d => d.id !== id);
+      await window.PlannerStorage.saveDailyPracticeSubjects(updated);
+      renderHomePractice(container);
+    });
   });
 
   container.querySelectorAll('[data-log-study]').forEach(btn => {
