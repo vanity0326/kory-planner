@@ -1,5 +1,8 @@
 /* Subject colors are fixed identity markers, never touched by seasonal skins.
-   Add new subjects here as Kory's class list is finalized. */
+   These specific classes are a starting palette for common subjects — since
+   subjects are captured freely as they're typed (not a fixed list), any
+   subject without a matching class below still gets a sensible default via
+   .subject-pill's base styles. */
 
 .subject-pill {
   display: inline-block;
@@ -7,6 +10,8 @@
   font-size: 12px;
   padding: 2px 8px;
   border-radius: 999px;
+  background: #f1efe8;
+  color: #444441;
 }
 
 .subject-math { background: #eaf3de; color: #27500a; }

@@ -42,11 +42,26 @@ async function saveAssignments(assignments) {
 
 async function getStreaks() {
   const data = await Storage.get('streaks');
-  return data || { current: 0, lastCompletedDate: null, history: [] };
+  // Two SEPARATE tracks, per spec: completion (finished work) and entry
+  // (proactively logging assignments) are different skills — planning vs
+  // executing — and shouldn't be conflated into one number.
+  return data || {
+    completion: { current: 0, lastCompletedDate: null, history: [] },
+    entry: { current: 0, lastEntryDate: null, history: [] },
+  };
 }
 
 async function saveStreaks(streaks) {
   return Storage.set('streaks', streaks);
+}
+
+async function getHomePractice() {
+  const data = await Storage.get('homePractice');
+  return data || [];
+}
+
+async function saveHomePractice(entries) {
+  return Storage.set('homePractice', entries);
 }
 
 async function getSettings() {
@@ -55,6 +70,13 @@ async function getSettings() {
     rewardThresholds: [],
     seasonalOverride: null, // null = auto-detect from date
     archiveTriggeredAt: null,
+    // Scaffolding level for step-split templates: 'full' | 'partial' | 'blank'.
+    // App can SUGGEST a change based on step success rate, but never applies
+    // it automatically — parent approves via Settings either direction.
+    scaffoldingLevel: 'full',
+    // Recent step outcomes, used only to compute the suggestion above.
+    // Each entry: { onTime: boolean, at: ISOString }. Capped at last 12.
+    stepOutcomeHistory: [],
   };
 }
 
@@ -88,6 +110,20 @@ async function getArchive(yearLabel) {
   return Storage.get(`archive-${yearLabel}`);
 }
 
+async function getKnownSubjects() {
+  const data = await Storage.get('subjects');
+  return data || [];
+}
+
+async function addKnownSubject(subject) {
+  const subjects = await getKnownSubjects();
+  const exists = subjects.some(s => s.toLowerCase() === subject.toLowerCase());
+  if (!exists) {
+    subjects.push(subject);
+    await Storage.set('subjects', subjects);
+  }
+}
+
 window.PlannerStorage = {
   getAssignments,
   saveAssignments,
@@ -101,4 +137,8 @@ window.PlannerStorage = {
   saveVillage,
   saveArchive,
   getArchive,
+  getKnownSubjects,
+  addKnownSubject,
+  getHomePractice,
+  saveHomePractice,
 };

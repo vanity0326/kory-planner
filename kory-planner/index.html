@@ -69,6 +69,33 @@
     .threshold-add input { height: 36px; border-radius: var(--radius); border: 0.5px solid var(--border-strong); padding: 0 8px; background: var(--surface-1); color: var(--text-primary); }
     .ics-url-box input { height: 36px; border-radius: var(--radius); border: 0.5px solid var(--border-strong); padding: 0 8px; background: var(--surface-1); color: var(--text-secondary); }
     h2 { font-size: 16px; margin: 1.5rem 0 0.5rem; }
+
+    /* Race/entry mechanics */
+    .segmented { display: flex; gap: 6px; margin-top: 4px; }
+    .segmented-option { flex: 1; padding: 8px; border-radius: var(--radius); border: 0.5px solid var(--border-strong); background: transparent; color: var(--text-secondary); font-size: 14px; }
+    .segmented-option.active { background: var(--text-primary); color: var(--surface-1); border-color: var(--text-primary); }
+    .race-tally { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-secondary); margin-bottom: 12px; flex-wrap: wrap; }
+    .race-tally i { color: var(--text-warning); font-size: 15px; }
+    .entry-streak-note { color: var(--text-muted); }
+    .type-tag { display: inline-flex; align-items: center; gap: 4px; margin-left: 6px; font-size: 11px; color: var(--text-secondary); }
+    .type-tag i { font-size: 12px; }
+    .nudge-chip { display: block; width: 100%; text-align: left; margin-bottom: 12px; padding: 10px 12px; border-radius: var(--radius); border: 0.5px dashed var(--border-strong); background: var(--surface-1); color: var(--text-secondary); font-size: 13px; }
+    .milestone-toast { display: flex; align-items: center; gap: 8px; background: var(--bg-warning); color: var(--text-warning); padding: 10px 12px; border-radius: var(--radius); font-size: 13px; margin-bottom: 12px; }
+    .step-split-box { background: var(--surface-1); border-radius: var(--radius); padding: 10px 12px; margin: 8px 0; }
+    .checkbox-row { display: flex; align-items: center; gap: 8px; font-size: 14px; margin-top: 8px; }
+    .checkbox-row input { width: auto; height: auto; }
+    .scaffolding-suggestion { background: var(--bg-warning); border-radius: var(--radius); padding: 12px; margin-top: 10px; }
+    .study-nudges { display: flex; flex-direction: column; gap: 6px; margin-bottom: 1rem; }
+
+    /* Milestone toast + badges */
+    .milestone-badge-icon { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .milestone-badge-icon i { color: var(--surface-1); font-size: 15px; }
+    .badge-shelf { display: flex; flex-wrap: wrap; gap: 8px; }
+    .badge-chip { display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; font-size: 12px; font-weight: 500; }
+    .badge-chip i { font-size: 14px; }
+    .avatar-accessories { display: flex; gap: 4px; margin-top: 8px; }
+    .badge-chip-mini { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .badge-chip-mini i { font-size: 11px; }
   </style>
 </head>
 <body>
@@ -81,6 +108,7 @@
 
     <nav class="bottom-nav" aria-label="Main navigation">
       <button data-route="today" aria-label="Today"><i class="ti ti-list-check" aria-hidden="true"></i></button>
+      <button data-route="home-practice" aria-label="Home practice"><i class="ti ti-notebook" aria-hidden="true"></i></button>
       <button data-route="village" aria-label="Village"><i class="ti ti-paw" aria-hidden="true"></i></button>
       <button data-route="reports" aria-label="Reports"><i class="ti ti-chart-bar" aria-hidden="true"></i></button>
     </nav>
@@ -93,6 +121,7 @@
   <script src="/src/views/reports.js"></script>
   <script src="/src/views/village.js"></script>
   <script src="/src/views/settings.js"></script>
+  <script src="/src/views/home-practice.js"></script>
   <script src="/src/app.js"></script>
   <script>
     document.querySelectorAll('.bottom-nav button[data-route]').forEach(btn => {

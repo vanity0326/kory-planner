@@ -32,6 +32,7 @@ const routes = {
   reports: () => window.PlannerViews.reports(mainEl()),
   village: () => window.PlannerViews.village(mainEl()),
   settings: () => window.PlannerViews.settings(mainEl()),
+  'home-practice': () => window.PlannerViews.homePractice(mainEl()),
 };
 
 function mainEl() {

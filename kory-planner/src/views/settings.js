@@ -4,20 +4,39 @@
 async function renderSettings(container) {
   const settings = await window.PlannerStorage.getSettings();
   const thresholds = settings.rewardThresholds || [];
+  const suggestion = window.PlannerAvatar.suggestScaffoldingChange(
+    settings.scaffoldingLevel, settings.stepOutcomeHistory || []
+  );
 
   container.innerHTML = `
     <div class="doing-screen">
       <h1>Settings</h1>
       <p class="field-hint">Parent-only controls. Not shown on Kory's main nav.</p>
 
+      <h2>Step-split scaffolding</h2>
+      <p class="field-hint">How much structure big-assignment step templates give him. You can adjust this either direction anytime.</p>
+      <select id="scaffolding-select">
+        <option value="full">Full — detailed step templates</option>
+        <option value="partial">Partial — lighter hints only</option>
+        <option value="blank">Blank — he drives it himself</option>
+      </select>
+
+      ${suggestion ? `
+        <div class="scaffolding-suggestion">
+          <p style="margin: 0 0 8px; font-size: 14px;">${suggestion.reason} Want to ${suggestion.direction === 'reduce' ? 'ease off a bit' : 'add a bit more structure back'}?</p>
+          <div class="form-actions">
+            <button type="button" class="secondary-btn" id="dismiss-suggestion">Not now</button>
+            <button type="button" class="primary-btn" id="accept-suggestion">Yes, switch to ${suggestion.suggestedLevel}</button>
+          </div>
+        </div>
+      ` : ''}
+
       <h2>Reward thresholds</h2>
       <div id="threshold-list">
         ${thresholds.map((t, i) => `
           <div class="threshold-row" data-index="${i}">
             <span>${t.xp} XP → ${escapeHtmlSettings(t.reward)}</span>
-            <button type="button" class="remove-threshold" data-index="${i}" aria-label="Remove">
-              <i class="ti ti-x" aria-hidden="true"></i>
-            </button>
+            <button type="button" class="remove-threshold" data-index="${i}" aria-label="Remove"><i class="ti ti-x" aria-hidden="true"></i></button>
           </div>
         `).join('') || '<p class="field-hint">No thresholds set yet.</p>'}
       </div>
@@ -42,26 +61,40 @@ async function renderSettings(container) {
       <div class="ics-url-box" id="ics-url-box"></div>
 
       <h2>Year-end archive</h2>
-      <p class="field-hint">Graduates this year's avatar into the village, archives assignments and streaks, and starts a fresh year. This cannot be undone from here.</p>
-      <button type="button" id="archive-btn" class="secondary-btn" style="width: 100%; color: var(--text-danger); border-color: var(--border-danger);">
-        Run year-end archive
-      </button>
+      <p class="field-hint">Graduates this year's avatar into the village, archives everything, and starts fresh. Irreversible from here.</p>
+      <button type="button" id="archive-btn" class="secondary-btn" style="width: 100%; color: var(--text-danger); border-color: var(--border-danger);">Run year-end archive</button>
       <p class="field-hint" id="archive-result"></p>
 
       <button class="secondary-btn" id="back-btn" style="margin-top: 1.5rem; width: 100%;">Back to today</button>
     </div>
   `;
 
+  document.getElementById('scaffolding-select').value = settings.scaffoldingLevel;
   document.getElementById('season-override').value = settings.seasonalOverride || '';
   const icsUrl = `${window.location.origin}/.netlify/functions/calendar-feed`;
-  document.getElementById('ics-url-box').innerHTML = `
-    <input type="text" readonly value="${icsUrl}" id="ics-url-input" style="width: 100%; font-size: 13px;" />
-  `;
+  document.getElementById('ics-url-box').innerHTML = `<input type="text" readonly value="${icsUrl}" style="width: 100%; font-size: 13px;" />`;
+
+  document.getElementById('scaffolding-select').addEventListener('change', async (e) => {
+    settings.scaffoldingLevel = e.target.value;
+    await window.PlannerStorage.saveSettings(settings);
+  });
+
+  const acceptBtn = document.getElementById('accept-suggestion');
+  if (acceptBtn) {
+    acceptBtn.addEventListener('click', async () => {
+      settings.scaffoldingLevel = suggestion.suggestedLevel;
+      settings.stepOutcomeHistory = []; // reset so we don't re-suggest immediately
+      await window.PlannerStorage.saveSettings(settings);
+      renderSettings(container);
+    });
+    document.getElementById('dismiss-suggestion').addEventListener('click', () => {
+      document.querySelector('.scaffolding-suggestion').style.display = 'none';
+    });
+  }
 
   container.querySelectorAll('.remove-threshold').forEach(btn => {
     btn.addEventListener('click', async () => {
-      const i = Number(btn.dataset.index);
-      thresholds.splice(i, 1);
+      thresholds.splice(Number(btn.dataset.index), 1);
       settings.rewardThresholds = thresholds;
       await window.PlannerStorage.saveSettings(settings);
       renderSettings(container);
@@ -85,8 +118,7 @@ async function renderSettings(container) {
   });
 
   document.getElementById('archive-btn').addEventListener('click', async () => {
-    const confirmed = confirm('This archives the current year and starts fresh. Continue?');
-    if (!confirmed) return;
+    if (!confirm('This archives the current year and starts fresh. Continue?')) return;
     const { yearLabel } = await window.PlannerAvatar.runYearEndArchive();
     document.getElementById('archive-result').textContent = `Archived as ${yearLabel}. A new year has started.`;
   });

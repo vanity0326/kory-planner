@@ -1,4 +1,8 @@
-const CACHE_NAME = 'kory-planner-v1';
+// Bump this version string on every deploy that changes cached files.
+// A changed value makes browsers detect sw.js as "updated" and properly
+// evict old caches — otherwise a service worker can silently keep serving
+// stale files indefinitely, even after a fresh deploy.
+const CACHE_NAME = 'kory-planner-v3';
 const SHELL_FILES = [
   '/',
   '/index.html',
@@ -14,6 +18,7 @@ const SHELL_FILES = [
   '/src/views/reports.js',
   '/src/views/village.js',
   '/src/views/settings.js',
+  '/src/views/home-practice.js',
 ];
 
 self.addEventListener('install', (event) => {
