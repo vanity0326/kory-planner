@@ -138,6 +138,29 @@ async function addKnownSubject(subject) {
   }
 }
 
+// Wipes testing/trial data (assignments, streaks, home practice, avatar
+// XP/level/badges, known-subjects list, step-outcome history) WITHOUT
+// touching Village/Rafters or creating an archive entry — unlike
+// runYearEndArchive, this is not a "graduate the year" action, just a
+// clean slate. Deliberately preserves parent-configured settings
+// (rewardThresholds, seasonalOverride, scaffoldingLevel) since those are
+// decisions, not test artifacts.
+async function clearTestData() {
+  await Promise.all([
+    saveAssignments([]),
+    saveHomePractice([]),
+    saveStreaks({
+      completion: { current: 0, lastCompletedDate: null, history: [] },
+      entry: { current: 0, lastEntryDate: null, history: [] },
+    }),
+    saveAvatar({ xp: 0, level: 1, badges: [], totalSelfEntries: 0, schoolYearLabel: null }),
+    Storage.set('subjects', []),
+  ]);
+  const settings = await getSettings();
+  settings.stepOutcomeHistory = [];
+  await saveSettings(settings);
+}
+
 window.PlannerStorage = {
   getAssignments,
   saveAssignments,
@@ -155,4 +178,5 @@ window.PlannerStorage = {
   addKnownSubject,
   getHomePractice,
   saveHomePractice,
+  clearTestData,
 };

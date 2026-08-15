@@ -60,6 +60,11 @@ async function renderSettings(container) {
       <p class="field-hint">Subscribe once in Google Calendar (Settings → Add calendar → From URL):</p>
       <div class="ics-url-box" id="ics-url-box"></div>
 
+      <h2>Testing</h2>
+      <p class="field-hint">Wipes assignments, streaks, home practice, and avatar XP/level/badges back to zero — for clearing out trial data before the real school year starts. Does NOT touch the Rafters or create an archive entry (that's what Year-End Archive is for, below). Your reward thresholds and seasonal skin choice are kept.</p>
+      <button type="button" id="clear-test-btn" class="secondary-btn" style="width: 100%; color: var(--text-danger); border-color: var(--border-danger);">Clear test data</button>
+      <p class="field-hint" id="clear-test-result"></p>
+
       <h2>Year-End Archive</h2>
       <p class="field-hint">Graduates this year's avatar into the village, archives everything, and starts fresh. Irreversible from here.</p>
       <button type="button" id="archive-btn" class="secondary-btn" style="width: 100%; color: var(--text-danger); border-color: var(--border-danger);">Run year-end archive</button>
@@ -115,6 +120,12 @@ async function renderSettings(container) {
   document.getElementById('season-override').addEventListener('change', async (e) => {
     settings.seasonalOverride = e.target.value || null;
     await window.PlannerStorage.saveSettings(settings);
+  });
+
+  document.getElementById('clear-test-btn').addEventListener('click', async () => {
+    if (!confirm('This wipes all assignments, streaks, home practice, and avatar progress. It will NOT touch the Rafters. Continue?')) return;
+    await window.PlannerStorage.clearTestData();
+    document.getElementById('clear-test-result').textContent = 'Test data cleared. Ready for the real school year.';
   });
 
   document.getElementById('archive-btn').addEventListener('click', async () => {

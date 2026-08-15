@@ -2,7 +2,7 @@
 // A changed value makes browsers detect sw.js as "updated" and properly
 // evict old caches — otherwise a service worker can silently keep serving
 // stale files indefinitely, even after a fresh deploy.
-const CACHE_NAME = 'kory-planner-v4';
+const CACHE_NAME = 'kory-planner-v6';
 const SHELL_FILES = [
   '/',
   '/index.html',
@@ -10,6 +10,7 @@ const SHELL_FILES = [
   '/src/app.js',
   '/src/storage.js',
   '/src/avatar.js',
+  '/src/stage-icons.js',
   '/src/styles/base.css',
   '/src/styles/subjects.css',
   '/src/styles/seasonal.css',

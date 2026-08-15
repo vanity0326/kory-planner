@@ -48,19 +48,25 @@
 
     .settings-link { position: absolute; top: 12px; right: 12px; background: none; border: none; font-size: 18px; color: var(--text-muted); padding: 8px; }
 
-    /* Village ("feeling" screen) — richer visuals allowed here only */
-    .village-screen { background: var(--surface-2); border-radius: 14px; padding: 1.25rem 1rem; border: 0.5px solid var(--border); }
+    /* Achievements ("feeling" screen) — richer visuals allowed here only */
+    .village-screen { background: var(--surface-2); border-radius: 14px; padding: 1.25rem 1rem; border: 0.5px solid var(--border); position: relative; }
     .avatar-card { display: flex; gap: 16px; align-items: center; background: var(--surface-1); border-radius: var(--radius); padding: 1rem; margin: 1rem 0 1.5rem; }
-    .avatar-visual { width: 56px; height: 56px; border-radius: 50%; background: var(--bg-warning); display: flex; align-items: center; justify-content: center; font-size: 28px; color: var(--text-warning); flex-shrink: 0; }
     .avatar-info { flex: 1; }
     .avatar-stage { margin: 0 0 6px; font-size: 15px; font-weight: 600; }
     .xp-track { height: 8px; border-radius: 999px; background: var(--border); overflow: hidden; }
     .xp-fill { height: 100%; background: var(--fill-success); }
     .xp-label { margin: 4px 0 0; font-size: 12px; color: var(--text-muted); }
-    .village-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; }
-    .village-resident { background: var(--surface-1); border-radius: var(--radius); padding: 12px; text-align: center; font-size: 20px; color: var(--text-warning); }
-    .resident-year { font-size: 12px; color: var(--text-primary); margin: 6px 0 2px; }
-    .resident-stage { font-size: 11px; color: var(--text-muted); margin: 0; }
+
+    /* Illustrated stage icon — shared by the avatar card and rafter banners */
+    .stage-icon-wrap { border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; padding: 10%; }
+    .stage-icon-wrap svg { width: 100%; height: 100%; }
+
+    /* Rafters: past-year banners, styled like retired team banners */
+    .rafters-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 14px 10px; padding-top: 6px; }
+    .rafter-banner { position: relative; border: 1.5px solid; border-radius: 6px 6px 14px 14px; padding: 14px 8px 10px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .rafter-hook { position: absolute; top: -5px; left: 50%; transform: translateX(-50%); width: 18px; height: 6px; border-radius: 3px; }
+    .rafter-year { font-size: 11px; font-weight: 600; color: var(--text-primary); margin: 4px 0 0; }
+    .rafter-stage { font-size: 11px; margin: 0; font-weight: 600; }
 
     /* Settings */
     .threshold-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 0.5px solid var(--border); font-size: 14px; }
@@ -116,6 +122,7 @@
 
   <script src="/src/storage.js"></script>
   <script src="/src/avatar.js"></script>
+  <script src="/src/stage-icons.js"></script>
   <script src="/src/views/today.js"></script>
   <script src="/src/views/add-assignment.js"></script>
   <script src="/src/views/reports.js"></script>

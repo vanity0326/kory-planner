@@ -44,7 +44,7 @@ function xpIntoLevel(xp) {
   return xp % XP_PER_LEVEL;
 }
 
-const STAGE_NAMES = ['Sprout', 'Sprout', 'Sapling', 'Sapling', 'Young tree', 'Young tree', 'Grown tree', 'Grown tree', 'Elder tree', 'Elder tree'];
+const STAGE_NAMES = ['Rookie', 'Rookie', 'Starter', 'Starter', 'Rising Star', 'Rising Star', 'All-Star', 'All-Star', 'MVP', 'MVP'];
 function stageNameForLevel(level) {
   return STAGE_NAMES[Math.min(level - 1, STAGE_NAMES.length - 1)];
 }
