@@ -56,6 +56,10 @@ window.PlannerApp = { navigate, detectSeason };
 
 document.addEventListener('DOMContentLoaded', async () => {
   await applySeason();
-  const startRoute = (window.location.hash || '#today').slice(1);
-  navigate(startRoute);
+  const rawHash = window.location.hash;
+  const startRoute = (rawHash || '#today').slice(1);
+  await navigate(startRoute);
+  if (!rawHash && startRoute === 'today' && window.PlannerTour) {
+    window.PlannerTour.maybeStartTour();
+  }
 });
