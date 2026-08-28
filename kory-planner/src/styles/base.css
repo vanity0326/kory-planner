@@ -1,0 +1,108 @@
+/* Reset */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+
+:root {
+  --surface-0: #f4f3ef;
+  --surface-1: #ffffff;
+  --surface-2: #fbfaf7;
+  --border: #e3e1da;
+  --border-strong: #c9c6bb;
+  --text-primary: #1f1e1b;
+  --text-secondary: #5c5a53;
+  --text-muted: #8a877d;
+  --text-danger: #a32d2d;
+  --bg-danger: #fcebeb;
+  --border-danger: #e24b4a;
+  --fill-success: #639922;
+  --on-success: #ffffff;
+  --text-warning: #854f0b;
+  --bg-warning: #faeeda;
+  --radius: 10px;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --surface-0: #1c1b19;
+    --surface-1: #262521;
+    --surface-2: #2c2b27;
+    --border: #3a382f;
+    --border-strong: #4d4b40;
+    --text-primary: #f1efe8;
+    --text-secondary: #b4b2a9;
+    --text-muted: #888780;
+    --text-danger: #f09595;
+    --bg-danger: #4a1b0c33;
+    --border-danger: #e24b4a;
+    --fill-success: #97c459;
+    --on-success: #173404;
+    --text-warning: #fac775;
+    --bg-warning: #41240233;
+  }
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--surface-0);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+#app {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  padding: 12px 12px 84px; /* room for bottom nav */
+  position: relative;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* "Doing" screens (Today, Add Assignment, Reports) intentionally have
+   NO seasonal decoration, NO drifting/animated motion, and NO transitions
+   on layout-affecting properties. Keep this shell calm year-round. */
+.doing-screen {
+  background: var(--surface-2);
+  border-radius: 14px;
+  padding: 1.25rem 1rem;
+  border: 0.5px solid var(--border);
+}
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-width: 480px;
+  margin: 0 auto;
+  background: var(--surface-1);
+  border-top: 0.5px solid var(--border);
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
+}
+
+.bottom-nav button {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: var(--text-muted);
+  padding: 6px 12px;
+}
+
+.bottom-nav button.active {
+  color: var(--text-primary);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

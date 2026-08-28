@@ -1,0 +1,18 @@
+/* Seasonal skins live here and ONLY here. They must never be referenced
+   from today.css / add-assignment.css / reports.css (the "doing" screens).
+   Valid targets: <body> background accents, .village-screen, .app-shell-chrome.
+   No animated/drifting motion — static accents only, per spec. */
+
+body.season-winter .app-shell-chrome { --season-accent: #85b7eb; }
+body.season-summer .app-shell-chrome { --season-accent: #1d9e75; }
+body.season-fall .app-shell-chrome { --season-accent: #d85a30; }
+body.season-spring .app-shell-chrome { --season-accent: #ed93b1; }
+body.season-birthday .app-shell-chrome { --season-accent: #f0997b; }
+
+.app-shell-chrome {
+  border-top: 3px solid var(--season-accent, transparent);
+}
+
+/* Achievements screen accent border only now — the richer seasonal icon
+   row itself is rendered by village.js from seasonal-icons.js, since a
+   3-icon set needs real markup, not a single CSS ::before glyph. */
